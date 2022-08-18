@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     db.Post.belongsTo(db.User); // post.addUser, post.removeUser, post.getUser, post.setUser 기본 제공
     db.Post.hasMany(db.Comment); // post.addComments, post.removeComments
     db.Post.hasMany(db.Image);
+    db.Post.hasMany(db.Location);
     db.Post.belongsToMany(db.Hashtag, { through: "PostHashtag" });
     db.Post.belongsToMany(db.User, { through: "Likes", as: "Likers" });
     db.Post.belongsTo(db.Post, { as: "Retweet" }); // 리트윗 관리를 위해, 현재 게시글의 원본 id를 RetweetId 컬럼에 저장.

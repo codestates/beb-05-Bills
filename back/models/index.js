@@ -15,6 +15,9 @@ db.Hashtag = require("./hashtag")(sequelize, Sequelize);
 db.Image = require("./image")(sequelize, Sequelize);
 db.Post = require("./post")(sequelize, Sequelize);
 db.User = require("./user")(sequelize, Sequelize);
+db.Wallet = require("./wallet")(sequelize, Sequelize);
+db.Nft = require("./nft")(sequelize, Sequelize);
+db.Location = require("./location")(sequelize, Sequelize);
 
 Object.keys(db).forEach((modelName) => {
   // 위에서 각각 정의한 model의 관계를 설정
