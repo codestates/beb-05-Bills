@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.10+commit.fc410830"
+		"version": "0.8.7+commit.e28d00a7"
 	},
 	"language": "Solidity",
 	"output": {
@@ -24,12 +24,6 @@
 						"internalType": "address",
 						"name": "spender",
 						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "oldAmount",
-						"type": "uint256"
 					},
 					{
 						"indexed": false,
@@ -374,11 +368,11 @@
 	},
 	"sources": {
 		"contracts/Token.sol": {
-			"keccak256": "0xb77da80f7c93d05f4c60e6ca7ab77bb68e0c30573be8e219c5205913c38221f9",
+			"keccak256": "0xcf751ec5a035046e04e3a4d6c0ae5ba65fe8a095cbf88b4d2df21763da0f395b",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://074ea93c75460db1d2b7ba2e7f681eff8ccd67f596a99ca0088a1d265ff87222",
-				"dweb:/ipfs/QmbomKmn89oTZCycFXVkC6nfRaDZQVY4DLCCf52ZvJgMXX"
+				"bzz-raw://833b8af8f2e72b1689e2382010cd11b0e3c6f6f5961504178026f0db89c424c0",
+				"dweb:/ipfs/QmXVq1umCQQhtxJ45cm5rmDgr9uuzb8eNSqM1mvTSPpvvQ"
 			]
 		}
 	},

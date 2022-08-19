@@ -33,7 +33,6 @@ interface ERC20Interface {
     event Approval(
         address indexed owner,
         address indexed spender,
-        uint256 oldAmount,
         uint256 amount
     );
 }
@@ -109,17 +108,13 @@ contract ICToken is ERC20Interface {
     // spender 에게 value 만큼의 토큰을 인출할 권리를 부여.
     // 이용시 반드시 Approval 이벤트 함수를 호출해야 함.
     function approve(address spender, uint256 amount)
-        external
+        public
         virtual
         override
         returns (bool)
     {
-        uint256 currentAllownace = _allowances[msg.sender][spender];
-        require(
-            currentAllownace >= amount,
-            "ERC20: Transfer amount exceeds allowance"
-        );
-        _approve(msg.sender, spender, currentAllownace, amount);
+        address owner = msg.sender;
+        _approve(owner, spender, amount);
         return true;
     }
 
@@ -136,12 +131,7 @@ contract ICToken is ERC20Interface {
             currentAllowance >= amount,
             "ERC20: transfer amount exceeds allowance"
         );
-        _approve(
-            sender,
-            msg.sender,
-            currentAllowance,
-            currentAllowance - amount
-        );
+        _approve(sender, msg.sender, currentAllowance - amount);
         return true;
     }
 
@@ -164,16 +154,12 @@ contract ICToken is ERC20Interface {
     function _approve(
         address owner,
         address spender,
-        uint256 currentAmount,
         uint256 amount
     ) internal virtual {
         require(owner != address(0), "ERC20: approve from the zero address");
         require(spender != address(0), "ERC20: approve to the zero address");
-        require(
-            currentAmount == _allowances[owner][spender],
-            "ERC20: invalid currentAmount"
-        );
+
         _allowances[owner][spender] = amount;
-        emit Approval(owner, spender, currentAmount, amount);
+        emit Approval(owner, spender, amount);
     }
 }
