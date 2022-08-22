@@ -3,7 +3,7 @@ const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
 const router = express.Router();
-const { Post, Comment, Image, User, Hashtag } = require("../models");
+const { Post, Comment, Image, User, Hashtag, Location } = require("../models");
 const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 
 try {
@@ -33,8 +33,16 @@ router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
   try {
     const hashtags = req.body.content.match(/#[^\s#]+/g);
     const post = await Post.create({
+      title: req.body.title,
       content: req.body.content,
       UserId: req.user.id,
+      viewCount: 0,
+    });
+
+    const location = await Location.create({
+      x: req.body.locationX,
+      y: req.body.locationY,
+      PostId: post.id,
     });
     if (hashtags) {
       const result = await Promise.all(
@@ -86,6 +94,7 @@ router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
         },
       ],
     });
+    console.log(fullPost);
     res.status(201).json(fullPost);
   } catch (error) {
     console.error(error);
@@ -185,13 +194,9 @@ router.get("/:postId", async (req, res, next) => {
           model: Post,
           as: "Retweet", // Post.Retweet
           include: [
-            {
-              model: User,
-              attributes: ["id", "nickname"],
-            },
-            {
-              model: Image,
-            },
+            { model: User, attributes: ["id", "nickname"] },
+            { model: Image },
+            { model: Location },
           ],
         },
         {

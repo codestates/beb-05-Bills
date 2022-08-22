@@ -4,13 +4,13 @@ module.exports = (sequelize, DataTypes) => {
     "Nft",
     {
       nftId: DataTypes.INTEGER,
+      name: DataTypes.STRING(20),
     },
     // 세팅값
     { charset: "utf8", collate: "utf8_general_ci" }
   );
   Nft.associate = (db) => {
-    db.Wallet.belongsTo(db.User);
-    db.Wallet.belongsTo(db.Wallet);
+    db.Nft.belongsTo(db.User);
   };
   return Nft;
 };

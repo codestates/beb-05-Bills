@@ -4,8 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     "Wallet",
     {
       address: DataTypes.STRING(70),
-      privateKey: DataTypes.STRING(70),
-      ballance: DataTypes.INTEGER,
+      privateKey: DataTypes.STRING(100),
+      balance: DataTypes.INTEGER,
     },
     // 세팅값
     { charset: "utf8", collate: "utf8_general_ci" }

@@ -1,10 +1,23 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const { User, Post, Image, Comment } = require("../models");
+const {
+  User,
+  Post,
+  Image,
+  Comment,
+  Nft,
+  Wallet,
+  Location,
+} = require("../models");
 const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 const passport = require("passport");
+const user = require("../models/user");
+const Web3 = require("web3");
 
 const router = express.Router();
+
+const GOERLI_RPC_URL = process.env.RPC_URL;
+const MANAGER_KEY = process.env.MANAGER_KEY;
 
 router.get("/", async (req, res, next) => {
   // GET /user
@@ -21,8 +34,11 @@ router.get("/", async (req, res, next) => {
           { model: User, as: "Followers", attributes: ["id", "nickname"] },
           { model: User, as: "Followings", attributes: ["id", "nickname"] },
           { model: Post, attributes: ["id"] },
+          { model: Wallet, attributes: { exclude: ["privateKey"] } },
+          { model: Nft, attributes: ["nftId", "name"] },
         ],
       });
+      console.log(fullUserWithoutPassword);
       res.status(200).json(fullUserWithoutPassword);
     } else {
       res.status(200).json(null);
@@ -64,19 +80,14 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
           exclude: ["password"],
         },
         include: [
-          {
-            model: Post,
-          },
-          {
-            model: User,
-            as: "Followings",
-          },
-          {
-            model: User,
-            as: "Followers",
-          },
+          { model: Post },
+          { model: User, as: "Followings" },
+          { model: User, as: "Followers" },
+          { model: Wallet, attributes: { exclude: ["privateKey"] } },
+          { model: Nft, attributes: ["nftId", "name"] },
         ],
       });
+      console.log(fullUserWithoutPassword);
       return res.status(200).json(fullUserWithoutPassword);
     });
   })(req, res, next);
@@ -91,12 +102,27 @@ router.post("/", isNotLoggedIn, async (req, res, next) => {
       // 4xx : 클라이언트의 잘못된 요청, 5xx : 서버의 잘못된 처리
       return res.status(403).send("이미 사용중인 아이디입니다."); // return 필수(response 중복 방지)
     }
+    // 신규 유저
     const hashedPassword = await bcrypt.hash(req.body.password, 12); // 10~13이 1초 정도로 적절
-    await User.create({
+    const User = await User.create({
       email: req.body.email,
       nickname: req.body.nickName,
       password: hashedPassword,
+      userType: "user",
     });
+    // 지갑 생성
+    const userId = User.id;
+    const web3 = new Web3(GOERLI_RPC_URL);
+    const newAccount = await web3.eth.accounts.create();
+    const address = newAccount.address;
+    const hashedPrivateKey = await bcrypt.hash(newAccount.privateKey, 12);
+    const wallet = await Wallet.create({
+      address: address,
+      privateKey: hashedPrivateKey,
+      balance: 0,
+      UserId: userId,
+    });
+    console.log(wallet);
     res.status(201).send("ok"); // 200 : 성공함, 201 : 잘 생성됨(더 구체적인 의미).
   } catch (error) {
     console.error(error);
@@ -180,6 +206,7 @@ router.get("/:userId", async (req, res, next) => {
         { model: User, as: "Followers", attributes: ["id"] },
         { model: User, as: "Followings", attributes: ["id"] },
         { model: Post, attributes: ["id"] },
+        { model: Nft, attributes: ["nftId", "name"] },
       ],
     });
     if (fullUserWithoutPassword) {
@@ -187,6 +214,7 @@ router.get("/:userId", async (req, res, next) => {
       data.Posts = data.Posts.length; // 개인정보 침해 예방
       data.Followers = data.Followers.length;
       data.Followings = data.Followings.length;
+      console.log(data);
       res.status(200).json(data);
     } else {
       res.status(404).json("존재하지 않는 사용자입니다.");
@@ -219,29 +247,21 @@ router.get("/:userId/posts", async (req, res, next) => {
         { model: Image },
         {
           model: Comment,
-          include: [
-            {
-              model: User,
-              attributes: ["id", "nickname"],
-            },
-          ],
+          include: [{ model: User, attributes: ["id", "nickname"] }],
         },
         { model: User, as: "Likers", attributes: ["id"] },
         {
           model: Post,
           as: "Retweet", // Post.Retweet
           include: [
-            {
-              model: User,
-              attributes: ["id", "nickname"],
-            },
-            {
-              model: Image,
-            },
+            { model: User, attributes: ["id", "nickname"] },
+            { model: Image },
+            { model: Location },
           ],
         },
       ],
     });
+    console.log(posts);
     res.status(200).json(posts);
   } catch (error) {
     console.error(error);
