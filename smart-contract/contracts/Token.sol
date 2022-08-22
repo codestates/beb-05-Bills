@@ -37,9 +37,11 @@ interface ERC20Interface {
     );
 }
 
-contract ICToken is ERC20Interface {
+contract EAToken is ERC20Interface {
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) public _allowances;
+    address public marketAddr;
+    address private _serverAddr;
 
     uint256 public _totalSupply;
     string public _name;
@@ -47,11 +49,12 @@ contract ICToken is ERC20Interface {
     uint8 public _decimals;
 
     constructor() {
-        _name = "Bill";
-        _symbol = "BFT";
+        _name = "EAToken";
+        _symbol = "EAT";
         _decimals = 18;
         _totalSupply = 100000000e18;
         _balances[msg.sender] = _totalSupply;
+        _serverAddr = msg.sender;
     }
 
     function name() public view returns (string memory) {
@@ -118,6 +121,15 @@ contract ICToken is ERC20Interface {
         return true;
     }
 
+    function setMarketAddr(address marketaddr) public returns (bool) {
+        require(
+            msg.sender == _serverAddr,
+            "Thist Function is Only called by server"
+        );
+        marketAddr = marketaddr;
+        return true;
+    }
+
     // spender가 거래 가능하도록 양도 받은 토큰을 전송
     function transferFrom(
         address sender,
@@ -132,6 +144,20 @@ contract ICToken is ERC20Interface {
             "ERC20: transfer amount exceeds allowance"
         );
         _approve(sender, msg.sender, currentAllowance - amount);
+        return true;
+    }
+
+    function transferWithMarket(
+        address from,
+        address to,
+        uint256 amount
+    ) public returns (bool) {
+        require(
+            msg.sender == marketAddr,
+            "Thist Function is Only called by market"
+        );
+        _transfer(from, to, amount);
+        emit Transfer(msg.sender, from, to, amount);
         return true;
     }
 

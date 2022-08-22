@@ -248,11 +248,11 @@
 	},
 	"sources": {
 		"contracts/Token.sol": {
-			"keccak256": "0xcf751ec5a035046e04e3a4d6c0ae5ba65fe8a095cbf88b4d2df21763da0f395b",
+			"keccak256": "0x2a4afbff4a6accfdfaef56259b7884698849b7240700737a8a4f930102765939",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://833b8af8f2e72b1689e2382010cd11b0e3c6f6f5961504178026f0db89c424c0",
-				"dweb:/ipfs/QmXVq1umCQQhtxJ45cm5rmDgr9uuzb8eNSqM1mvTSPpvvQ"
+				"bzz-raw://35ac1a4cb3555d11ffc0da1ebeb514ff87d9fc87ed00e94ecd6a194fbdaf9112",
+				"dweb:/ipfs/QmY35G8E4pd4JE442EfJkEXqY3hsRtSqsvBAKX35ckRLMc"
 			]
 		}
 	},

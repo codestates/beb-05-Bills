@@ -16,13 +16,11 @@ interface others {
         bytes memory data
     ) external;
 
-    function transferFrom(
-        address spender,
-        address recipient,
+    function transferWithMarket(
+        address from,
+        address to,
         uint256 amount
     ) external returns (bool);
-
-    // function approve(address spender, uint256 amount) external returns (bool);
 }
 
 contract CouponMarket {
@@ -56,9 +54,8 @@ contract CouponMarket {
         // address payable receiver = payable(_seller[discount]);
         // uint256 price = 70;
         // receiver.transfer(price);
-        // others(TokenContractAddr).approve(address(this), price);
 
-        others(TokenContractAddr).transferFrom(
+        others(TokenContractAddr).transferWithMarket(
             msg.sender,
             _seller[discount],
             price

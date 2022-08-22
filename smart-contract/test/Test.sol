@@ -6,9 +6,9 @@ import "../contracts/Token.sol";
 
 contract TestSimpleStorage {
     function testSimpleStorage() public {
-        ICToken ss = new ICToken();
+        EAToken token = new EAToken();
 
-        string memory expected = "Bill";
-        Assert.equal(ss.name(), expected, "value equal test");
+        string memory expected = "EAToken";
+        Assert.equal(token.name(), expected, "value equal test");
     }
 }
