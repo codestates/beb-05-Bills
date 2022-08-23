@@ -9,63 +9,6 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "account",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
-					}
-				],
-				"name": "balanceOf",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "from",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "to",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bytes",
-						"name": "data",
-						"type": "bytes"
-					}
-				],
-				"name": "safeTransferFrom",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
 						"name": "from",
 						"type": "address"
 					},
@@ -105,7 +48,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/CouponMarket.sol": "others"
+			"contracts/Coupon.sol": "others"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -119,12 +62,20 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/CouponMarket.sol": {
-			"keccak256": "0x646b9111efb3469883affcd152338ef5d56dca75e5d3affd2060c91822cf6b9e",
+		"contracts/Coupon.sol": {
+			"keccak256": "0xc7f4ce013887257982f70499420deadd8591548a61d20e7c7c886cd9180af5b4",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://e2a3bc592ac7110c648db3f9b8b5ecdd120bc13f0743ced30e7aead5bcf21fcd",
-				"dweb:/ipfs/QmTwsvrWWKvph66nEMZx1mTanVx4JQfEWWkHov6rppA14n"
+				"bzz-raw://5e51bd94ffbc0b697e3656c40115d79e0aa0589aac81896b78b4a15a73ac173c",
+				"dweb:/ipfs/QmNbgnPHV8ukRUeqPRYjDbkXuB4ZZiXw48kvWJuNbPpf1v"
+			]
+		},
+		"contracts/ERC165.sol": {
+			"keccak256": "0x0a0a4df4cb2e9310fe65f4f1401a2afe840ba6fd927782548a583e0ebefd9c18",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://add4bee2116bedc18f6bd569492a0db44b75b6bd569fe004e5a15be580f8f1f9",
+				"dweb:/ipfs/QmYBKyig1pmsFDvWNeSNjHeZ8Sj4UpDgP4YkahjTxbT6ts"
 			]
 		}
 	},

@@ -3,14 +3,12 @@ let web3 = new Web3('http://127.0.0.1:7545');
 
 var EAToken = artifacts.require("EAToken");
 var EatNFTs = artifacts.require("EatNFTs");
-var Coupon = artifacts.require("CouponContract");
 var CouponMarket = artifacts.require("CouponMarket");
 
 module.exports = async function(deployer) {
     // 컨트랙트 배포
     await deployer.deploy(EAToken);
     await deployer.deploy(EatNFTs);
-    await deployer.deploy(Coupon);
     await deployer.deploy(CouponMarket);
 
     // 초기 설정에 필요한 컨트랙트 정보 가져오기
@@ -30,5 +28,5 @@ module.exports = async function(deployer) {
     //market에서 거래가 가능하도록 token 컨트랙트에서 마켓 주소 지정
     var tokenContract = new web3.eth.Contract(tokenContractInfo.abi, tokenContractInfo.address);
     await tokenContract.methods.setMarketAddr(couponMarketInfo.address).send({from:serverAddress});
-    await tokenContract.methods.marketAddr().call().then((el)=>{console.log(`marketContractAddr = ${el}`)});
+    await tokenContract.methods.marketAddr().call().then((el)=>{console.log(`marketContractAddr In TokenContract = ${el}`)});
 };
