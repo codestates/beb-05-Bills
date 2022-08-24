@@ -1,13 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState , useCallback} from 'react';
+import ReactDOM from 'react-dom';
 import ReactModal from 'react-modal';
+import KakaoMap from './KakaoMap';
+import styled  from 'styled-components';
+import { Input } from 'antd';
+import useInput from '../hooks/useInput';
+
+
+const SearchInput = styled(Input.Search)`
+vertical-align: middle;
+`;
 
 const ModalPage = () => {
 
   const [modal, setModal] = useState(true); // 모달창
+  const [searchInput, onChangeSearchInput] = useInput('');
+  const [searchKeyWorld , setSearchKeyWorld] = useState("이태원맛집");
 
   const modalOff = () => {
     setModal(false);
   };
+
+  const onSearch = useCallback(() => {
+    setSearchKeyWorld(searchInput);
+    console.log(searchKeyWorld);
+  });
+  
   return (
     <>
       <ReactModal
@@ -38,7 +56,16 @@ const ModalPage = () => {
             padding: "20px",
           },
         }}
-      ></ReactModal>
+      >
+      <KakaoMap keyword={searchKeyWorld}></KakaoMap>
+      
+      <SearchInput
+            enterButton
+            value={searchInput}
+            onChange={onChangeSearchInput}
+            onSearch = {onSearch}
+          />
+      </ReactModal>
     </>
   );
 };

@@ -7,10 +7,8 @@ const KakaoMap = (keyword) => {
     const [map, setMap] = useState()
     const [locationX,setLocationX] = useState([]) // x 좌표
     const [locationY,setLocationY] = useState([]) // Y 좌표
-    
-    const map_wrap={
-      
-    }
+    console.log(`kakakoKeyword${keyword}`)
+
     useEffect(() => {
       if (!map) return // 정보 확인 
       const ps = new kakao.maps.services.Places()
