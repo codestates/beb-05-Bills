@@ -413,6 +413,25 @@ contract CouponMarket is ERC1155 {
         return res;
     }
 
+    function stocksByAccount(address account)
+        public
+        view
+        returns (uint256[] memory, uint256[] memory)
+    {
+        uint256 balance = HowMuchKindsOfCoupons();
+        uint256[] memory keys = KindsOfCoupons();
+        uint256[] memory discounts = new uint256[](balance);
+        uint256[] memory balances = new uint256[](balance);
+        for (uint256 i = 0; i < balance; i++) {
+            uint256 _balance = balanceOf(account, keys[i]);
+            if (_balance != 0) {
+                discounts[i] = keys[i];
+                balances[i] = _balance;
+            }
+        }
+        return (discounts, balances);
+    }
+
     function buyCoupon(
         uint256 discount,
         uint256 amount,

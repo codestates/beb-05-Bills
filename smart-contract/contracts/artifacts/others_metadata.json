@@ -63,11 +63,11 @@
 	},
 	"sources": {
 		"contracts/Coupon.sol": {
-			"keccak256": "0xc7f4ce013887257982f70499420deadd8591548a61d20e7c7c886cd9180af5b4",
+			"keccak256": "0x7c6da084c09837a32328dd9372de992c5e9b099ca45ea96e040274ba2696d2ee",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://5e51bd94ffbc0b697e3656c40115d79e0aa0589aac81896b78b4a15a73ac173c",
-				"dweb:/ipfs/QmNbgnPHV8ukRUeqPRYjDbkXuB4ZZiXw48kvWJuNbPpf1v"
+				"bzz-raw://d1e462a6d41fb0e77810ed578a5d5491803a83e3e6e4b07b7c5b2a576fe9d456",
+				"dweb:/ipfs/QmTCTXtPfcW2qW4UfE5CYsGPuNvt1CW8DoqApUeLTiKbCo"
 			]
 		},
 		"contracts/ERC165.sol": {
