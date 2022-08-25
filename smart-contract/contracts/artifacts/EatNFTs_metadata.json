@@ -360,6 +360,49 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					}
+				],
+				"name": "tokenByIndex",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					}
+				],
+				"name": "tokenOfOwnerByIndex",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
 						"name": "tokenId",
 						"type": "uint256"
 					}
@@ -370,6 +413,19 @@
 						"internalType": "string",
 						"name": "",
 						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalSupply",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -454,8 +510,17 @@
 				"symbol()": {
 					"details": "See {IERC721Metadata-symbol}."
 				},
+				"tokenByIndex(uint256)": {
+					"details": "See {IERC721Enumerable-tokenByIndex}."
+				},
+				"tokenOfOwnerByIndex(address,uint256)": {
+					"details": "See {IERC721Enumerable-tokenOfOwnerByIndex}."
+				},
 				"tokenURI(uint256)": {
 					"details": "See {IERC721Metadata-tokenURI}."
+				},
+				"totalSupply()": {
+					"details": "See {IERC721Enumerable-totalSupply}."
 				},
 				"transferFrom(address,address,uint256)": {
 					"details": "See {IERC721-transferFrom}."
@@ -497,11 +562,11 @@
 			]
 		},
 		"contracts/NFT.sol": {
-			"keccak256": "0x230a192e0ba470f15e3b30e40fd96a67c9a1750a1af885ab7ffdf9f61cf95dbe",
+			"keccak256": "0x775600dc6333f067926b461e5bfb77b729a58aac4383a49ba51eb24cdc93ab8b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c50796b1f0ac50a518b270ba8ffcfc2f447ffb574d3dfd15d82708679fb3e866",
-				"dweb:/ipfs/QmPa6VfsJFVvteiwdPnMH79Lnur33mTbmRgdPkhsUacfJf"
+				"bzz-raw://492ac70fa2497c668abe399d079440c81866b4c764e65477cdcaaaaa7554d2d7",
+				"dweb:/ipfs/QmewZfL2zbYecPY3r6zBTUXQisBBq959BDgMbow5Ys94Wq"
 			]
 		}
 	},
