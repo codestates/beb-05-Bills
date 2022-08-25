@@ -18,6 +18,7 @@ db.User = require("./user")(sequelize, Sequelize);
 db.Wallet = require("./wallet")(sequelize, Sequelize);
 db.Nft = require("./nft")(sequelize, Sequelize);
 db.Location = require("./location")(sequelize, Sequelize);
+db.Coupon = require("./coupon")(sequelize, Sequelize);
 
 Object.keys(db).forEach((modelName) => {
   // 위에서 각각 정의한 model의 관계를 설정

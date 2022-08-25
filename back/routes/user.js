@@ -11,13 +11,9 @@ const {
 } = require("../models");
 const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 const passport = require("passport");
-const user = require("../models/user");
-const Web3 = require("web3");
+const { web3, tokenContract } = require("../utils/web3Handler");
 
 const router = express.Router();
-
-const GOERLI_RPC_URL = process.env.RPC_URL;
-const MANAGER_KEY = process.env.MANAGER_KEY;
 
 router.get("/", async (req, res, next) => {
   // GET /user
@@ -104,15 +100,14 @@ router.post("/", isNotLoggedIn, async (req, res, next) => {
     }
     // 신규 유저
     const hashedPassword = await bcrypt.hash(req.body.password, 12); // 10~13이 1초 정도로 적절
-    const User = await User.create({
+    const newUser = await User.create({
       email: req.body.email,
       nickname: req.body.nickName,
       password: hashedPassword,
       userType: "user",
     });
     // 지갑 생성
-    const userId = User.id;
-    const web3 = new Web3(GOERLI_RPC_URL);
+    const userId = newUser.id;
     const newAccount = await web3.eth.accounts.create();
     const address = newAccount.address;
     const hashedPrivateKey = await bcrypt.hash(newAccount.privateKey, 12);
@@ -122,6 +117,7 @@ router.post("/", isNotLoggedIn, async (req, res, next) => {
       balance: 0,
       UserId: userId,
     });
+    console.log(tokenContract);
     console.log(wallet);
     res.status(201).send("ok"); // 200 : 성공함, 201 : 잘 생성됨(더 구체적인 의미).
   } catch (error) {
@@ -183,7 +179,7 @@ router.delete("/follower/:userId", isLoggedIn, async (req, res, next) => {
   try {
     const user = await User.findOne({ where: { id: req.params.userId } });
     if (!user) {
-      return res.status(403).send("없는 사람을 차단하시게요?");
+      return res.status(403).send("존재하지 않는 유저입니다.");
     }
     await user.removeFollowings(req.user.id);
     res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
@@ -217,7 +213,7 @@ router.get("/:userId", async (req, res, next) => {
       console.log(data);
       res.status(200).json(data);
     } else {
-      res.status(404).json("존재하지 않는 사용자입니다.");
+      res.status(404).json("존재하지 않는 유저입니다.");
     }
   } catch (error) {
     console.error(error);
@@ -250,15 +246,15 @@ router.get("/:userId/posts", async (req, res, next) => {
           include: [{ model: User, attributes: ["id", "nickname"] }],
         },
         { model: User, as: "Likers", attributes: ["id"] },
-        {
-          model: Post,
-          as: "Retweet", // Post.Retweet
-          include: [
-            { model: User, attributes: ["id", "nickname"] },
-            { model: Image },
-            { model: Location },
-          ],
-        },
+        // {
+        //   model: Post,
+        //   as: "Retweet", // Post.Retweet
+        //   include: [
+        //     { model: User, attributes: ["id", "nickname"] },
+        //     { model: Image },
+        //     { model: Location },
+        //   ],
+        // },
       ],
     });
     console.log(posts);
@@ -274,7 +270,7 @@ router.patch("/:userId/follow", isLoggedIn, async (req, res, next) => {
   try {
     const user = await User.findOne({ where: { id: req.params.userId } }); // 유령회원인지 확인
     if (!user) {
-      return res.status(403).send("없는 사람을 팔로우하려고 하시네요?");
+      return res.status(403).send("존재하지 않는 유저입니다.");
     }
     await user.addFollowers(req.user.id); // 상대방 기준으로 나는 팔로워이므로, 그 정보에 나의 아이디 추가
     res.status(200).json({ UserId: parseInt(req.params.userId) });
@@ -289,7 +285,7 @@ router.delete("/:userId/follow", isLoggedIn, async (req, res, next) => {
   try {
     const user = await User.findOne({ where: { id: req.params.userId } }); // 유령회원인지 확인
     if (!user) {
-      return res.status(403).send("없는 사람을 언팔로우하려고 하시네요?");
+      return res.status(403).send("존재하지 않는 유저입니다.");
     }
     await user.removeFollowers(req.user.id);
     res.status(200).json({ UserId: parseInt(req.params.userId) });

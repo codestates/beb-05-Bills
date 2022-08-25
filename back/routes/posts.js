@@ -33,19 +33,19 @@ router.get("/", async (req, res, next) => {
           ],
         },
         { model: User, as: "Likers", attributes: ["id"] },
-        {
-          model: Post,
-          as: "Retweet", // Post.Retweet
-          include: [
-            {
-              model: User,
-              attributes: ["id", "nickname"],
-            },
-            {
-              model: Image,
-            },
-          ],
-        },
+        // {
+        //   model: Post,
+        //   as: "Retweet", // Post.Retweet
+        //   include: [
+        //     {
+        //       model: User,
+        //       attributes: ["id", "nickname"],
+        //     },
+        //     {
+        //       model: Image,
+        //     },
+        //   ],
+        // },
       ],
     });
     console.log(posts);
@@ -80,14 +80,6 @@ router.get("/byviewcount", async (req, res, next) => {
           include: [{ model: User, attributes: ["id", "nickname"] }],
         },
         { model: User, as: "Likers", attributes: ["id"] },
-        {
-          model: Post,
-          as: "Retweet", // Post.Retweet
-          include: [
-            { model: User, attributes: ["id", "nickname"] },
-            { model: Image },
-          ],
-        },
       ],
     });
     console.log(posts);
