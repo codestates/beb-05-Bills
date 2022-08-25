@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon app"
+    "start": "nodemon app",
+    "daemon": ""
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +19,7 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
     "mysql2": "^2.2.5",
+    "node-cron": "^3.0.2",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "sequelize": "^6.6.2",
