@@ -5,7 +5,9 @@ const contracts = require('./env.json');
 const nftContract = contracts.NFTCONTRACT;
 
 let web3 = new Web3('http://127.0.0.1:7545');
-var myContract = new web3.eth.Contract(nftABI, nftContract);
+var myContract = new web3.eth.Contract(nftABI, nftContract,{
+     gasLimit: 3000000,
+});
 
 // mintNFT : nft 발행
 async function mintNFT(serverAddr, uri){
