@@ -1,8 +1,17 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const { User, Post, Image, Comment } = require("../models");
+const {
+  User,
+  Post,
+  Image,
+  Comment,
+  Nft,
+  Wallet,
+  Location,
+} = require("../models");
 const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 const passport = require("passport");
+const { web3, tokenContract } = require("../utils/web3Handler");
 
 const router = express.Router();
 
@@ -21,8 +30,11 @@ router.get("/", async (req, res, next) => {
           { model: User, as: "Followers", attributes: ["id", "nickname"] },
           { model: User, as: "Followings", attributes: ["id", "nickname"] },
           { model: Post, attributes: ["id"] },
+          { model: Wallet, attributes: { exclude: ["privateKey"] } },
+          { model: Nft, attributes: ["nftId", "name"] },
         ],
       });
+      console.log(fullUserWithoutPassword);
       res.status(200).json(fullUserWithoutPassword);
     } else {
       res.status(200).json(null);
@@ -64,19 +76,14 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
           exclude: ["password"],
         },
         include: [
-          {
-            model: Post,
-          },
-          {
-            model: User,
-            as: "Followings",
-          },
-          {
-            model: User,
-            as: "Followers",
-          },
+          { model: Post },
+          { model: User, as: "Followings" },
+          { model: User, as: "Followers" },
+          { model: Wallet, attributes: { exclude: ["privateKey"] } },
+          { model: Nft, attributes: ["nftId", "name"] },
         ],
       });
+      console.log(fullUserWithoutPassword);
       return res.status(200).json(fullUserWithoutPassword);
     });
   })(req, res, next);
@@ -91,12 +98,27 @@ router.post("/", isNotLoggedIn, async (req, res, next) => {
       // 4xx : 클라이언트의 잘못된 요청, 5xx : 서버의 잘못된 처리
       return res.status(403).send("이미 사용중인 아이디입니다."); // return 필수(response 중복 방지)
     }
+    // 신규 유저
     const hashedPassword = await bcrypt.hash(req.body.password, 12); // 10~13이 1초 정도로 적절
-    await User.create({
+    const newUser = await User.create({
       email: req.body.email,
       nickname: req.body.nickName,
       password: hashedPassword,
+      userType: "user",
     });
+    // 지갑 생성
+    const userId = newUser.id;
+    const newAccount = await web3.eth.accounts.create();
+    const address = newAccount.address;
+    const hashedPrivateKey = await bcrypt.hash(newAccount.privateKey, 12);
+    const wallet = await Wallet.create({
+      address: address,
+      privateKey: hashedPrivateKey,
+      balance: 0,
+      UserId: userId,
+    });
+    console.log(tokenContract);
+    console.log(wallet);
     res.status(201).send("ok"); // 200 : 성공함, 201 : 잘 생성됨(더 구체적인 의미).
   } catch (error) {
     console.error(error);
@@ -157,7 +179,7 @@ router.delete("/follower/:userId", isLoggedIn, async (req, res, next) => {
   try {
     const user = await User.findOne({ where: { id: req.params.userId } });
     if (!user) {
-      return res.status(403).send("없는 사람을 차단하시게요?");
+      return res.status(403).send("존재하지 않는 유저입니다.");
     }
     await user.removeFollowings(req.user.id);
     res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
@@ -180,6 +202,7 @@ router.get("/:userId", async (req, res, next) => {
         { model: User, as: "Followers", attributes: ["id"] },
         { model: User, as: "Followings", attributes: ["id"] },
         { model: Post, attributes: ["id"] },
+        { model: Nft, attributes: ["nftId", "name"] },
       ],
     });
     if (fullUserWithoutPassword) {
@@ -187,9 +210,10 @@ router.get("/:userId", async (req, res, next) => {
       data.Posts = data.Posts.length; // 개인정보 침해 예방
       data.Followers = data.Followers.length;
       data.Followings = data.Followings.length;
+      console.log(data);
       res.status(200).json(data);
     } else {
-      res.status(404).json("존재하지 않는 사용자입니다.");
+      res.status(404).json("존재하지 않는 유저입니다.");
     }
   } catch (error) {
     console.error(error);
@@ -219,29 +243,21 @@ router.get("/:userId/posts", async (req, res, next) => {
         { model: Image },
         {
           model: Comment,
-          include: [
-            {
-              model: User,
-              attributes: ["id", "nickname"],
-            },
-          ],
+          include: [{ model: User, attributes: ["id", "nickname"] }],
         },
         { model: User, as: "Likers", attributes: ["id"] },
-        {
-          model: Post,
-          as: "Retweet", // Post.Retweet
-          include: [
-            {
-              model: User,
-              attributes: ["id", "nickname"],
-            },
-            {
-              model: Image,
-            },
-          ],
-        },
+        // {
+        //   model: Post,
+        //   as: "Retweet", // Post.Retweet
+        //   include: [
+        //     { model: User, attributes: ["id", "nickname"] },
+        //     { model: Image },
+        //     { model: Location },
+        //   ],
+        // },
       ],
     });
+    console.log(posts);
     res.status(200).json(posts);
   } catch (error) {
     console.error(error);
@@ -254,7 +270,7 @@ router.patch("/:userId/follow", isLoggedIn, async (req, res, next) => {
   try {
     const user = await User.findOne({ where: { id: req.params.userId } }); // 유령회원인지 확인
     if (!user) {
-      return res.status(403).send("없는 사람을 팔로우하려고 하시네요?");
+      return res.status(403).send("존재하지 않는 유저입니다.");
     }
     await user.addFollowers(req.user.id); // 상대방 기준으로 나는 팔로워이므로, 그 정보에 나의 아이디 추가
     res.status(200).json({ UserId: parseInt(req.params.userId) });
@@ -269,7 +285,7 @@ router.delete("/:userId/follow", isLoggedIn, async (req, res, next) => {
   try {
     const user = await User.findOne({ where: { id: req.params.userId } }); // 유령회원인지 확인
     if (!user) {
-      return res.status(403).send("없는 사람을 언팔로우하려고 하시네요?");
+      return res.status(403).send("존재하지 않는 유저입니다.");
     }
     await user.removeFollowers(req.user.id);
     res.status(200).json({ UserId: parseInt(req.params.userId) });

@@ -4,10 +4,15 @@ module.exports = (sequelize, DataTypes) => {
     "Post",
     // 첫 번째 인자: 스키마
     {
+      title: {
+        type: DataTypes.TEXT,
+        allowNull: false, // 필수
+      },
       content: {
         type: DataTypes.TEXT,
         allowNull: false, // 필수
       },
+      viewCount: DataTypes.INTEGER,
     },
     // 두 번째 인자: 세팅값
     {
@@ -16,12 +21,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   Post.associate = (db) => {
-    db.Post.belongsTo(db.User); // post.addUser, post.removeUser, post.getUser, post.setUser 기본 제공
+    db.Post.hasOne(db.Location);
     db.Post.hasMany(db.Comment); // post.addComments, post.removeComments
     db.Post.hasMany(db.Image);
+    db.Post.belongsTo(db.User); // post.addUser, post.removeUser, post.getUser, post.setUser 기본 제공
+    //db.Post.belongsTo(db.Post, { as: "Retweet" }); // 리트윗 관리를 위해, 현재 게시글의 원본 id를 RetweetId 컬럼에 저장.
     db.Post.belongsToMany(db.Hashtag, { through: "PostHashtag" });
     db.Post.belongsToMany(db.User, { through: "Likes", as: "Likers" });
-    db.Post.belongsTo(db.Post, { as: "Retweet" }); // 리트윗 관리를 위해, 현재 게시글의 원본 id를 RetweetId 컬럼에 저장.
   };
   return Post;
 };

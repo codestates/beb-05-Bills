@@ -10,6 +10,7 @@ const postRouter = require("./routes/post");
 const postsRouter = require("./routes/posts");
 const userRouter = require("./routes/user");
 const hashtagRouter = require("./routes/hashtag");
+const couponRouter = require("./routes/coupon");
 const db = require("./models");
 const passportConfig = require("./passport");
 
@@ -17,7 +18,7 @@ dotenv.config();
 const app = express();
 
 db.sequelize
-  .sync()
+  .sync({ force: false })
   .then(() => {
     console.log("db 연결 성공");
   })
@@ -32,7 +33,7 @@ app.use(
   })
 );
 app.use(morgan("dev"));
-app.use(session({  secret: '@bills'}));
+app.use(session({ secret: "@bills" }));
 app.use(express.static(path.join(__dirname, "uploads")));
 app.use(express.json()); // axios 통신 : req.body에 프론트의 데이터를 json 형식으로 담아 줌.
 app.use(express.urlencoded({ extended: true })); // urlencoded 방식으로 넘어온 form submit 데이터를 qs 라이브러리로 해독(multipart 아님)
@@ -54,6 +55,7 @@ app.use("/post", postRouter);
 app.use("/posts", postsRouter);
 app.use("/user", userRouter);
 app.use("/hashtag", hashtagRouter);
+app.use("/coupon", couponRouter);
 
 const PORT = 3065;
 
