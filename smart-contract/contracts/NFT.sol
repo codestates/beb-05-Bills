@@ -21,6 +21,7 @@ contract EatNFTs is ERC721URIStorage, Ownable {
     {
         _tokenIds.increment();
         _totalSupply = _totalSupply + 1;
+
         uint256 newItemId = _tokenIds.current();
         _mint(msg.sender, newItemId);
         _setTokenURI(newItemId, tokenURI);

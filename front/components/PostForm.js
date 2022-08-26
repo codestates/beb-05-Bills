@@ -1,7 +1,10 @@
-import React, { useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useEffect, useRef, useCallback, useMemo,useState } from 'react';
 import { Button, Form, Input } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import useInput from '../hooks/useInput';
+import { useRouter } from 'next/router'
+import Location from "./Location";
+
 import {
   ADD_POST_REQUEST,
   addPost,
@@ -12,6 +15,7 @@ import {
 const PostForm = () => {
   const dispatch = useDispatch();
   const { imagePaths, addPostDone } = useSelector((state) => state.post);
+  const router = useRouter()
   const formStyle = useMemo(() => {
     '10px 0 20px';
   }, []);
@@ -24,13 +28,24 @@ const PostForm = () => {
   const imgPreviewStyle = useMemo(() => {
     '200px';
   }, []);
+
+  const kakoBtnStyle = useMemo(() => {
+    '200px';
+  }, []);
+
   const [text, onChangeText, setText] = useInput('');
+
+  const [show, setShow] = useState(false);
+
+
+  const [popup, setPopup] = useState({open: false, title: "", message: "", callback: false});
 
   useEffect(() => {
     if (addPostDone) {
       setText('');
     }
   }, [addPostDone]);
+
 
   const onSubmit = useCallback(() => {
     if (!text || !text.trim()) {
@@ -47,6 +62,7 @@ const PostForm = () => {
   const onClickImageUpload = useCallback(() => {
     imageInput.current.click();
   }, [imageInput.current]);
+
   const onChangeImages = useCallback((e) => {
     // 이미지 업로드 대화상자에서 확인/취소를 클릭한 경우 호출됨
     console.log('images', e.target.files); // e.target.files는 배열이 아니라 유사배열임.
@@ -67,15 +83,29 @@ const PostForm = () => {
     },
     []
   );
+  //카카오 지도 호출 
+  const onClickKakaoMap = useCallback((e) => {
+    // 팝업창을 열었을 때, 처음으로 보이는 위치
+    console.log("지도싱행");
+  });
+
+
 
   return (
     <Form style={formStyle} encType="multipart/form-data" onFinish={onSubmit}>
+      <Input type="text" id="title" placeholder='제목을 입력해주세요' maxLength={140}></Input>
       <Input.TextArea
         value={text}
         onChange={onChangeText}
         maxLength={140}
         placeholder="어떤 신기한 일이 있었나요?"
       />
+      {/* <div>
+        <Location locationX="37.365264512305174" locationY="127.10676860117488" >
+
+        </Location>
+        <Kakao keyword="이태원 맛집"></Kakao>
+      </div> */}
       <div>
         <input
           type="file"
@@ -85,8 +115,11 @@ const PostForm = () => {
           onChange={onChangeImages}
         />
         <Button onClick={onClickImageUpload}>이미지 업로드</Button>
+        <Button onClick={onClickKakaoMap}>
+        </Button>
+        <Button onClick={() => router.back()}>목록</Button>
         <Button type="primary" style={uploadBtnStyle} htmlType="submit">
-          짹짹
+          작성완료
         </Button>
       </div>
       <div>
