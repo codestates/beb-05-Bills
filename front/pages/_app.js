@@ -11,6 +11,7 @@ const SNSApp = ({ Component }) => (
     <Head>
       <title>SNS</title>
     </Head>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f966c20ea7d1f4169943ffe75a384d23&libraries=services,clusterer,drawing"></script>
     <Component />
   </>
 );
