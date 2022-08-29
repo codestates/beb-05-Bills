@@ -217,6 +217,7 @@ router.get("/:postId", async (req, res, next) => {
         },
       ],
     });
+    fullPost.viewCount += 1;
     res.status(200).json(fullPost);
   } catch (error) {
     console.error(error);

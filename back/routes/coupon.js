@@ -1,11 +1,25 @@
 const express = require("express");
 const router = express.Router();
-const { Coupon } = require("../models/coupon");
-const { Wallet } = require("../models");
+const { Coupon, Wallet } = require("../models");
 const { couponContract, tokenContract } = require("../utils/contractHandler");
 const { tokenAddress } = require("../constants/");
 
 const CHAIN_ID = process.env.CHAIN_ID;
+
+router.post("/", async (req, res, next) => {
+  try {
+    await couponContract.methods.CouponMint(req.body.discount, req.body.amount);
+    await Coupon.create({
+      discount: req.body.discount,
+      amount: req.body.amount,
+      price: req.body.price,
+    });
+    res.status(200);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
 
 router.get("/", async (req, res, next) => {
   try {
@@ -33,6 +47,7 @@ router.get("/:discount", async (req, res, next) => {
     next(error);
   }
 });
+
 router.post("/buy/:discount", async (req, res, next) => {
   try {
     const wallet = await Wallet.findOne({ where: { UserId: req.user.id } });
@@ -53,7 +68,7 @@ router.post("/buy/:discount", async (req, res, next) => {
         coupon.price,
         tokenAddress[CHAIN_ID]
       )
-      .send();
+      .send({ from: address });
     coupon.amount -= 1;
     wallet.balance = await tokenContract.methods.balanceOf(address).call();
     return res.status(200);
