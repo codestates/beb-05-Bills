@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(100),
         allowNull: false, // 필수
       },
+      userType: {
+        type: DataTypes.STRING(10),
+        allowNull: true, // 임시로 true
+      },
     },
     // 두 번째 인자: 세팅값
     {
@@ -25,8 +29,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   User.associate = (db) => {
+    db.User.hasOne(db.Wallet);
     db.User.hasMany(db.Post);
     db.User.hasMany(db.Comment);
+    db.User.hasMany(db.Nft);
     db.User.belongsToMany(db.Post, { through: "Likes", as: "Liked" });
     db.User.belongsToMany(db.User, {
       through: "Follow",

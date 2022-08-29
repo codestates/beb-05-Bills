@@ -1,0 +1,56 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"author": "Matt Condon (@shrugs)",
+			"details": "Provides counters that can only be incremented, decremented or reset. This can be used e.g. to track the number of elements in a mapping, issuing ERC721 ids, or counting request ids. Include with `using Counters for Counters.Counter;`",
+			"kind": "dev",
+			"methods": {},
+			"title": "Counters",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/NFT.sol": "Counters"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/ERC165.sol": {
+			"keccak256": "0x0a0a4df4cb2e9310fe65f4f1401a2afe840ba6fd927782548a583e0ebefd9c18",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://add4bee2116bedc18f6bd569492a0db44b75b6bd569fe004e5a15be580f8f1f9",
+				"dweb:/ipfs/QmYBKyig1pmsFDvWNeSNjHeZ8Sj4UpDgP4YkahjTxbT6ts"
+			]
+		},
+		"contracts/NFT.sol": {
+			"keccak256": "0x775600dc6333f067926b461e5bfb77b729a58aac4383a49ba51eb24cdc93ab8b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://492ac70fa2497c668abe399d079440c81866b4c764e65477cdcaaaaa7554d2d7",
+				"dweb:/ipfs/QmewZfL2zbYecPY3r6zBTUXQisBBq959BDgMbow5Ys94Wq"
+			]
+		}
+	},
+	"version": 1
+}
