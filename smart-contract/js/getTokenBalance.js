@@ -16,7 +16,7 @@ async function getTokenBalance(address){
 //함수 사용
 async function main(){
     const accounts = await web3.eth.getAccounts();
-    const user1 = accounts[1];
+    const user1 = "0x279A23E99aCA8E6Fce459f3e0e3F36f7D2dE52cB"//accounts[1];
 
     const res = await getTokenBalance(user1);
     console.log(res)

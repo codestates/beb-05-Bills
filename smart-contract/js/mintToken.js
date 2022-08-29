@@ -22,7 +22,7 @@ console.log(`after send, ${after}`);
 async function main(){
     const accounts = await web3.eth.getAccounts();
     const serverAddr = accounts[0];
-    const address = accounts[1];
+    const address = "0x279A23E99aCA8E6Fce459f3e0e3F36f7D2dE52cB"//accounts[1];
     const amount = 1000;
 
     mintToken(amount,serverAddr,address)
