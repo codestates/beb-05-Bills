@@ -35,6 +35,16 @@ const UserProfile = () => {
           <br />
           {me.Followers.length}
         </div>,
+        <div key="post">
+          <Link href="/postPage">
+            <a>글작성</a>
+          </Link>
+        </div>,
+        <div key="productPage">
+          <Link href="/productPage">
+            <a>쿠폰구매</a>
+          </Link>
+        </div>,
       ]}
     >
       <Card.Meta
